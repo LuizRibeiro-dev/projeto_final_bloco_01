@@ -1,10 +1,24 @@
 ﻿import readlinesync = require("readline-sync");
 import { colors } from "./src/util/Colors";
+import { AguaComGas } from "./src/model/AguaComGas";
+import { AguaSemGas } from "./src/model/AguaSemGas";
 
 
 export function main() {
 
     let opcao: number;
+
+    const c1: AguaComGas = new AguaComGas(1, "Agua da Nestle", 1, 5.00, "Nestle");
+    const c2: AguaComGas = new AguaComGas(2,"Agua da Danone", 1 , 4.50 , "Danone");
+    
+    c1.visualizar();
+    c2.visualizar();
+
+    const s1: AguaSemGas = new AguaSemGas(3,"Agua da Bonafont", 2 , 4.00 , "Bonafont");
+    const s2: AguaSemGas = new AguaSemGas(4,"Agua da Frescca", 2 , 5.00, "Frescca");
+
+    s1.visualizar()
+    s2.visualizar()
 
     while (true) {
 
@@ -85,8 +99,7 @@ export function main() {
 function sobre(): void {
     console.log("\n*****************************************************");
     console.log("Projeto Desenvolvido por: ");
-    console.log("Generation Brasil - generation@generation.org");
-    console.log("github.com/conteudoGeneration");
+    console.log("Luiz Ribeiro - github.com/LuizRibeiro-dev");
     console.log("*****************************************************");
 }
 
