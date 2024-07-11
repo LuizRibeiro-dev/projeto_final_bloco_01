@@ -19,6 +19,6 @@ export class AguaComGas extends Produto{
 
     public visualizar(){
         super.visualizar();
-        console.log(`\nAguaC da agua: ${this._AguaC}`);
+        console.log(`\nMarca da agua: ${this._AguaC}`);
     }
 }

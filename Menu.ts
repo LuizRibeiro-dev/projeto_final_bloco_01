@@ -1,24 +1,25 @@
 ﻿import readlinesync = require("readline-sync");
 import { colors } from "./src/util/Colors";
+import { Produto } from "./src/model/Produto";
 import { AguaComGas } from "./src/model/AguaComGas";
 import { AguaSemGas } from "./src/model/AguaSemGas";
+import { ProdutoController } from "./src/controller/ProdutoController";
 
 
 export function main() {
 
-    let opcao: number;
+    let opcao, id, tipo, preco: number;
+    let nome, categoria, marca: string; 
 
-    const c1: AguaComGas = new AguaComGas(1, "Agua da Nestle", 1, 5.00, "Nestle");
-    const c2: AguaComGas = new AguaComGas(2,"Agua da Danone", 1 , 4.50 , "Danone");
+    const tipoProduto = ['Agua c/ gas', 'Agua s/ gas']
+
+    const produtos: ProdutoController = new ProdutoController()
+
+    // Produto.cadastrarProduto(new AguaComGas(Produto.gerarId(),'Agua da Nestle', 1 , 5.00, 'Nestle'))
+    // Produto.cadastrarProduto(new AguaComGas(Produto.gerarId(),'Agua da Danone', 1 , 4.50, 'Danone'))
     
-    c1.visualizar();
-    c2.visualizar();
-
-    const s1: AguaSemGas = new AguaSemGas(3,"Agua da Bonafont", 2 , 4.00 , "Bonafont");
-    const s2: AguaSemGas = new AguaSemGas(4,"Agua da Frescca", 2 , 5.00, "Frescca");
-
-    s1.visualizar()
-    s2.visualizar()
+    // Produto.cadastrarProduto(new AguaSemGas(Produto.gerarId(), 'Agua da Bonafont', 2, 4.00, 'Bonafont'));
+    // Produto.cadastrarProduto(new AguaSemGas(Produto.gerarId(), 'Agua da Frescca', 2, 5.00, 'Frescca'));
 
     while (true) {
 
@@ -29,8 +30,8 @@ export function main() {
         console.log("                                                     ");
         console.log("*****************************************************");
         console.log("                                                     ");
-        console.log("            1 - Criar Produto                        ");
-        console.log("            2 - Listar todos os Produtos             ");
+        console.log("            1 - Adicionar Produto                        ");
+        console.log("            2 - Listar todos os Produto             ");
         console.log("            3 - Buscar Produto por Id                ");
         console.log("            4 - Atualizar Dados do Produto           ");
         console.log("            5 - Apagar Produto                       ");
@@ -53,37 +54,109 @@ export function main() {
         switch (opcao) {
             case 1:
                 console.log(colors.fg.bluestrong,
-                    "\n\nCriar Produto\n\n", colors.reset);
-
+                    "\n\nAdicionar Produto\n\n", colors.reset)
+                    console.log("Digite o Nome do Produto: ")
+                    nome = readlinesync.question("")
+    
+                    console.log("Digite o Tipo do Produto: ")
+                    tipo = readlinesync.keyInSelect(tipoProduto, "", {cancel: false}) + 1 
+    
+                    console.log("Digite o Preço do Produto: ")
+                    preco = readlinesync.questionFloat("")
+    
+                    switch(tipo){
+                        case 1:
+                            console.log("Digite a marca: ")
+                            categoria = readlinesync.question("")
+    
+                            produtos.cadastrarProduto(new AguaComGas(produtos.gerarId(), nome, tipo, preco, categoria)) 
+    
+                            break
+                        case 2:
+                            console.log("Digite a marca: ")
+                            marca = readlinesync.question("")
+    
+                            produtos.cadastrarProduto( new AguaSemGas(produtos.gerarId(), nome, tipo, preco, marca))
+    
+                            break
+    
+                    }
 
                 keyPress()
                 break;
+
             case 2:
                 console.log(colors.fg.bluestrong,
-                    "\n\nListar todos os Produtos\n\n", colors.reset);
-   
+                    "\n\nListar todos os Produto\n\n", colors.reset);
+                    produtos.listarProdutos()
                 keyPress()
                 break;
+
             case 3:
                 console.log(colors.fg.bluestrong,
-                    "\n\nConsultar Produtos - por Id\n\n", colors.reset);
-
+                    "\n\nConsultar Produto - por Id\n\n", colors.reset);
+                
+                console.log("Digite o ID: ")
+                id = readlinesync.questionInt("")
+                produtos.consultarPorId(id)
 
                 keyPress()
                 break;
+
             case 4:
                 console.log(colors.fg.bluestrong,
                     "\n\nAtualizar dados do Produto\n\n", colors.reset);
+     console.log("Digite o ID do Produto: ")
+                id = readlinesync.questionInt("")
+
+                let produto = produtos.buscarArray(id);
+
+                if(produto !== null){
+                    console.log("Digite o Nome do Produto: ")
+                    nome = readlinesync.question("")
+                    
+                    tipo = produto.tipo;
     
+                    console.log("Digite o Preço do Produto: ")
+                    preco = readlinesync.questionFloat("")
+
+                    switch(tipo){
+                        case 1:
+                            console.log("Digite a categoria: ")
+                            categoria = readlinesync.question("")
+    
+                            produtos.atualizarProduto(new AguaComGas(id, nome, tipo, preco, categoria)) 
+    
+                            break
+                        case 2:
+                            console.log("Digite a marca: ")
+                            marca = readlinesync.question("")
+    
+                            produtos.atualizarProduto( new AguaSemGas(id, nome, tipo, preco, marca))
+    
+                            break
+    
+                    }
+                } else{
+                    console.log(colors.fg.redstrong)
+                    console.log("\n O produto não foi encontrado")
+                    console.log(colors.reset)
+                }
+
 
                 keyPress()
                 break;
+
             case 5:
                 console.log(colors.fg.bluestrong,
                     "\n\nApagar um Produto\n\n", colors.reset);
+                console.log("Digite o ID do Produto que será deletado: ")
+                id = readlinesync.questionInt("")
 
+                produtos.deletarProduto(id)
                 keyPress()
                 break;
+
             default:
                 console.log(colors.fg.bluestrong,
                     "\nOpção Inválida!\n", colors.reset);
